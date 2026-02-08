@@ -7,7 +7,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv(r'E:\intern preparation\ML\decision tree classifier\titanic.csv')
+df = pd.read_csv(r'titanic.csv')
 print(df.head())
 
 df_1 = df.drop(['PassengerId', 'Name', 'SibSp', 'Parch', 'Ticket', 'Cabin', 'Embarked'], axis=1)
@@ -48,7 +48,7 @@ sns.catplot(x=df_1.Survived.map({0:'not survived', 1:'survived'}), y=df_1.Age,
             col= df_1.Sex.map({0:'female', 1:'male'}),         # Separate plots for Male and Female
             kind='strip', 
             data=df_1)
-plt.savefig('decision_tree_cm.jpg', dpi=300, bbox_inches='tight')       # saving the plot 
+plt.savefig('decision_tree_plot.jpg', dpi=300, bbox_inches='tight')       # saving the plot 
 plt.show()
 
 
