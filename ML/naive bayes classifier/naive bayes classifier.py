@@ -8,7 +8,7 @@ from sklearn.decomposition import PCA
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv(r'E:\intern preparation\ML\naive bayes classifier\titanic.csv')
+df = pd.read_csv(r'titanic.csv')
 print(df.head())
 
 df_1 = df.drop(['PassengerId', 'Name', 'SibSp', 'Parch', 'Ticket', 'Cabin', 'Embarked'], axis=1)
