@@ -5,10 +5,11 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.decomposition import PCA
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = datasets.load_iris()
+df = datasets.load_digits()
 
 df_1 = pd.DataFrame(data=df.data, columns=df.feature_names)
 df_1['target'] = df.target
@@ -95,20 +96,22 @@ plt.show()
 
 
 
+        # as there is 64 dimensions, so for plotting only 2 dimension are required 
+pca = PCA(n_components=2)
+pca_reduce = pca.fit_transform(x)
 
-
+reduce_df = pd.DataFrame(pca_reduce, columns=['a', 'b'])   # making a new dataframe and assigning it reduced dimension dataset
 
 
 
             # plotting , just to visualize the k-nearest neigbor model 
 
 
-
 # 1. Train a new KNN model using ONLY 2 features (e.g., Sepal Length & Width) for 2D plotting
-feature_x = 'sepal length (cm)'
-feature_y = 'sepal width (cm)'
+feature_x = 'a'
+feature_y = 'b'
 
-X_2d = df_1[[feature_x, feature_y]]
+X_2d = reduce_df[[feature_x, feature_y]]
 y_2d = df_1.target
 
 # Fit on 2D data
@@ -121,10 +124,9 @@ random_point = np.array([
     ])
 
 # Predict the class for the random point
-mapping  = {0:'Setosa', 1:'Versicolor', 2:'Virginica'}
 prediction = knn_2d.predict(random_point)
 print(f"Random Point:    {random_point[0]}")
-print(f"Predicted Class is : {mapping[prediction[0]]}\n")
+print(f"Predicted Class is : {prediction[0]}\n")
 
 # 3. Plot the Decision Boundary and Data
 plt.figure(figsize=(10, 6))
