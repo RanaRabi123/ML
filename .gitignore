@@ -3,3 +3,4 @@ myenv_git/
 *.h5
 *.pt
 *.keras
+*.txt
