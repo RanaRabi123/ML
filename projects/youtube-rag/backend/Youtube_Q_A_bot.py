@@ -9,7 +9,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.documents import Document
 from langchain_community.embeddings import SentenceTransformerEmbeddings
 
-os.environ["GOOGLE_API_KEY"] = "AQ.Ab8RN6I0V6eLRSWqQrzzHeKN9lXVNw5xblp_zK4h1Qd5ktOWpw"       # setting the gemini api key, if you are in colab 
+os.environ["GOOGLE_API_KEY"] = "API key here "       # setting the gemini api key, if you are in colab 
 
 def preprocess(user_link):
     fetch_text = []
