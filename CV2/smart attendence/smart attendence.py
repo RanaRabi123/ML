@@ -5,8 +5,8 @@ from datetime import datetime
 import pandas as pd
 import time
 
-IMAGE_FOLDER_PATH = r"D:\intern preparation\CV2\img"
-ATTENDANCE_LOG_FILE = r"D:\intern preparation\CV2\Attendance.csv"
+IMAGE_FOLDER_PATH = r"D:\intern preparation\CV2\smart attendence\img"
+ATTENDANCE_LOG_FILE = r"D:\intern preparation\CV2\smart attendence\Attendance.csv"
 HOLD_SECONDS = 3
 CONFIDENCE_THRESHOLD = 60   # lower is strict/good
 
