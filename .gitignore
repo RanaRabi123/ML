@@ -5,3 +5,5 @@ myenv_git/
 *.keras
 *.txt
 *.env
+*.pdf
+*.docx
