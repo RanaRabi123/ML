@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rossmann Sales Forecasting — Dashboard</title>
+<style>
+  :root {
+    --navy: #1B2A41;
+    --slate: #4A5568;
+    --green: #3F7D58;
+    --red: #B0413E;
+    --bg: #F5F6F8;
+    --card: #FFFFFF;
+    --border: #E4E7EB;
+    --muted: #8A93A3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--navy);
+  }
+  header {
+    background: var(--navy);
+    color: white;
+    padding: 28px 40px;
+  }
+  header h1 { margin: 0 0 6px; font-size: 24px; font-weight: 600; }
+  header p { margin: 0; color: #B7C2D0; font-size: 14px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 40px 60px; }
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: -30px 0 28px;
+  }
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+  .kpi .value { font-size: 26px; font-weight: 700; color: var(--navy); }
+  .kpi.accent { background: var(--green); }
+  .kpi.accent .label { color: #DCEBE2; }
+  .kpi.accent .value { color: white; }
+  .section-title { font-size: 18px; font-weight: 600; margin: 36px 0 14px; color: var(--navy); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .card h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+  .card .sub { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
+  .chart-wrap { position: relative; width: 100%; }
+  .callout {
+    background: #FDF0EF;
+    border: 1px solid #F2D3D0;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+  .callout h3 { margin: 0 0 8px; color: var(--red); font-size: 15px; }
+  .callout p { margin: 0; font-size: 14px; line-height: 1.55; color: #5C3230; }
+  ul.insights { margin: 0; padding-left: 18px; }
+  ul.insights li { font-size: 14px; line-height: 1.6; margin-bottom: 10px; color: var(--slate); }
+  ul.insights li b { color: var(--navy); }
+  .table-mini { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .table-mini td { padding: 6px 4px; border-bottom: 1px solid var(--border); }
+  .table-mini td:first-child { color: var(--slate); }
+  .table-mini td:last-child { text-align: right; font-weight: 600; color: var(--navy); }
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 30px 0 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Rossmann Store Sales — Forecasting Dashboard</h1>
+  <p>End-to-end predictive analytics project · 1,115 stores · Jan 2013 – Jul 2015</p>
+</header>
+
+<div class="wrap">
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">Rows modeled</div><div class="value">844,392</div></div>
+    <div class="kpi"><div class="label">Stores</div><div class="value">1,115</div></div>
+    <div class="kpi"><div class="label">Test RMSE</div><div class="value">2,419</div></div>
+    <div class="kpi accent"><div class="label">Test R² (leak-free)</div><div class="value">0.393</div></div>
+  </div>
+
+  <div class="callout">
+    <h3>Data leakage finding</h3>
+    <p><b>Customers</b> correlates ~0.82 with Sales but is measured on the same day as Sales — not known in advance. Including it as a feature raises R² to 0.891, which looks better but cannot be achieved in real forecasting. The 0.393 R² above is the honest, deployable number.</p>
+  </div>
+
+  <div class="section-title">Model performance</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Leak-free vs. leaked model</h3>
+      <div class="sub">Test R², same hyperparameters and split</div>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="leakChart" role="img" aria-label="Bar chart comparing test R2 of 0.393 without Customers and 0.891 with Customers">Without Customers: 0.393. With Customers (leaked): 0.891.</canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Feature importance</h3>
+      <div class="sub">Leak-free pipeline, top drivers of Sales</div>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="importanceChart" role="img" aria-label="Horizontal bar chart of feature importances led by Promo, then Store and DayOfWeek">Promo is the top feature, followed by Store, DayOfWeek, WeekOfYear, and Month.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Exploratory data analysis</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Sales distribution</h3>
+      <div class="sub">Daily sales across open-store days</div>
+      <div class="chart-wrap" style="height:250px;">
+        <canvas id="histChart" role="img" aria-label="Histogram of daily sales, right-skewed, peaking around 4000 to 5500">Sales distribution is right-skewed, peaking between 4,000 and 5,500.</canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Average sales by day of week</h3>
+      <div class="sub">Monday and Sunday run highest</div>
+      <div class="chart-wrap" style="height:250px;">
+        <canvas id="dowChart" role="img" aria-label="Bar chart of average sales by day of week, highest on Monday and Sunday">Average sales are highest on Monday and Sunday, lowest on Saturday.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Model configuration</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Best hyperparameters</h3>
+      <div class="sub">From RandomizedSearchCV (regularization-focused search)</div>
+      <table class="table-mini">
+        <tr><td>learning_rate</td><td>0.2</td></tr>
+        <tr><td>max_depth</td><td>6</td></tr>
+        <tr><td>min_child_weight</td><td>1</td></tr>
+        <tr><td>subsample</td><td>0.7</td></tr>
+        <tr><td>colsample_bytree</td><td>0.9</td></tr>
+        <tr><td>reg_lambda</td><td>1</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Promo effect</h3>
+      <div class="sub">Average sales, promo vs. no promo</div>
+      <div class="chart-wrap" style="height:200px;">
+        <canvas id="promoChart" role="img" aria-label="Bar chart showing average sales of 5929 without promo and 8228 with promo">Average sales: 5,929 without a promotion, 8,228 with a promotion.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Business insights</div>
+  <div class="card">
+    <ul class="insights">
+      <li><b>Promotions are the strongest lever known in advance</b> — running a promo lifts average sales from 5,929 to 8,228, a ~39% increase.</li>
+      <li><b>Store identity matters a lot</b> — individual stores vary substantially in baseline sales due to location, size, and local demographics.</li>
+      <li><b>Calendar effects are real but secondary</b> — day of week, week of year, and month collectively help forecast staffing and inventory needs.</li>
+      <li><b>Customers should not be used as a forecasting input</b> — it isn't known ahead of a sales day, even though it's the strongest raw correlate of Sales.</li>
+      <li><b>Report performance honestly</b> — the leak-free pipeline explains ~39% of test variance; this is the number to share with stakeholders, not the inflated ~89%.</li>
+    </ul>
+  </div>
+
+  <footer>Rossmann Store Sales dataset · XGBoost regression pipeline · Generated for course submission</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const NAVY = '#1B2A41', GREEN = '#3F7D58', RED = '#B0413E', SLATE='#4A5568', MUTED='#8A93A3', GRID='#E4E7EB';
+Chart.defaults.color = SLATE;
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif";
+
+new Chart(document.getElementById('leakChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Without Customers\n(deployable)', 'With Customers\n(leaked)'],
+    datasets: [{ data: [0.393, 0.891], backgroundColor: [GREEN, RED], borderRadius: 4, maxBarThickness: 70 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false },
+      tooltip: { callbacks: { label: (c) => 'R2: ' + c.parsed.y.toFixed(3) } } },
+    scales: { y: { min: 0, max: 1, grid: { color: GRID } }, x: { grid: { display: false } } }
+  }
+});
+
+const impLabels = ['StateHoliday_c','StateHoliday_a','Year','StateHoliday_b','SchoolHoliday','IsWeekend','StateHoliday_0','Day','Month','WeekOfYear','DayOfWeek','Store','Promo'];
+const impValues = [0.006,0.013,0.020,0.021,0.023,0.029,0.036,0.037,0.042,0.047,0.070,0.087,0.570];
+new Chart(document.getElementById('importanceChart'), {
+  type: 'bar',
+  data: { labels: impLabels, datasets: [{ data: impValues, backgroundColor: NAVY, borderRadius: 3 }] },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { grid: { color: GRID } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }
+  }
+});
+
+const histLabels = ["0","1385","2770","4155","5540","6925","8310","9695","11080","12465","13850","15235","16620","18005","19390","20775","22160"];
+const histCounts = [1288,22555,100013,182747,185054,137671,87350,52555,29887,16829,10035,6370,4116,2917,1868,1188,761];
+new Chart(document.getElementById('histChart'), {
+  type: 'bar',
+  data: { labels: histLabels, datasets: [{ data: histCounts, backgroundColor: NAVY, borderRadius: 2 }] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxRotation: 60, autoSkip: true, maxTicksLimit: 8 }, title: { display: true, text: 'Sales', font: { size: 11 } } },
+      y: { grid: { color: GRID } }
+    }
+  }
+});
+
+new Chart(document.getElementById('dowChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    datasets: [{ data: [8216.1,7088.1,6728.1,6767.3,7072.7,5874.8,8224.7], backgroundColor: GREEN, borderRadius: 4 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { grid: { color: GRID }, title: { display: true, text: 'Avg Sales', font: { size: 11 } } }, x: { grid: { display: false } } }
+  }
+});
+
+new Chart(document.getElementById('promoChart'), {
+  type: 'bar',
+  data: { labels: ['No promo','Promo'], datasets: [{ data: [5929.4, 8228.3], backgroundColor: [MUTED, GREEN], borderRadius: 4, maxBarThickness: 70 }] },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { grid: { color: GRID } }, y: { grid: { display: false } } }
+  }
+});
+</script>
+
+</body>
+</html>

@@ -7,3 +7,6 @@ myenv_git/
 *.env
 *.pdf
 *.docx
+*.zip
+*.csv
+*.xlsx
