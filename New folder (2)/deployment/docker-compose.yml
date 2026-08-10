@@ -1,0 +1,25 @@
+# docker-compose for local/staging deployment of the full system.
+# Run: docker compose -f deployment/docker-compose.yml up --build
+
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-this-in-prod}
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.dashboard
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    restart: unless-stopped

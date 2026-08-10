@@ -1,0 +1,23 @@
+{
+  "MAE": 1270.32,
+  "RMSE": 1725.27,
+  "R2": 0.6944,
+  "MAPE_percent": 29.95,
+  "train_rows": 704524,
+  "test_rows": 124328,
+  "features": [
+    "Holiday_a",
+    "Holiday_b",
+    "Holiday_c",
+    "Store",
+    "DayOfWeek",
+    "Promo",
+    "SchoolHoliday",
+    "Year",
+    "Month",
+    "Day",
+    "WeekOfYear",
+    "Sales_Lag_7",
+    "Sales_RollingMean_7"
+  ]
+}

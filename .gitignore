@@ -10,3 +10,5 @@ myenv_git/
 *.zip
 *.csv
 *.xlsx
+*.pptx
+'langsmith/'
