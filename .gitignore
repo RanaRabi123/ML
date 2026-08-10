@@ -12,3 +12,4 @@ myenv_git/
 *.xlsx
 *.pptx
 'langsmith/'
+'langsmith\langsmith-masterclass\.env'
