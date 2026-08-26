@@ -1,0 +1,4 @@
+Example 2: Explanations in medical AI
+Gap: Many papers show AI can diagnose diseases, but few test how different types of explanations affect doctorsâ€™ trust.
+Hypothesis: Showing feature-level explanations (like SHAP values) increases doctorsâ€™ trust in a diagnostic AI more than showing only an overall confidence score.
+Measure: Trust score from doctors, with and without detailed explanations.ÿÿ
